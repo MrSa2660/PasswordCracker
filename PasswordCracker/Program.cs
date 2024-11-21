@@ -30,12 +30,11 @@ namespace PasswordCracker {
                             return;
                     }
                 }
-                catch (Exception e) {
-                    Console.WriteLine("Error: " + e.Message);
+                catch (Exception ex) {
+                    Console.WriteLine($"Error: {ex.Message}");
                 }   
             }
         }
-        
         static void crackpawd() {
             // Get user input for the password
             Console.Write("Enter a password: ");
@@ -48,10 +47,12 @@ namespace PasswordCracker {
             }
             genNumber(userPassword);
         }
+
         static string getNumber() {
             var randomNumberString = random.Next(0, 9999).ToString("0000");
             return randomNumberString;
         }
+
         static void guessnumber() {
             bool firstNumber = false;
             bool secondNumber = false;
@@ -61,7 +62,6 @@ namespace PasswordCracker {
 
             Regex regex = new Regex("^[0-9]{1}$");
             while (true) {
-                Console.WriteLine(rand);
                 for (int i = 0; i < 4; i++) {
                     if (thirdNumber) { i = 3; }
                     else if (secondNumber) { i = 2; }
@@ -100,7 +100,12 @@ namespace PasswordCracker {
             }
         }
 
+        static bool IsPalindrome(string s) {
+            return s == new string(s.Reverse().ToArray());
+        }
+
         static void genNumber(string userPassword) {
+            Console.Clear();
             // Store the current cursor position (useful for overwriting later)
             var position = Console.GetCursorPosition();
 
@@ -111,6 +116,7 @@ namespace PasswordCracker {
             // Initialize an empty string to store the guessed password
             string guessedPassword = "";
             int j = 0;
+            int k = 0;
             // Loop until the guessed password matches the user password
             while (guessedPassword != userPassword) {
                 guessedPassword = "";
@@ -118,6 +124,7 @@ namespace PasswordCracker {
                 for (int i = 0; i < userPassword.Length; i++) {
                     int randomIndex = random.Next(possibleChars.Length);
                     guessedPassword += possibleChars[randomIndex];
+                    if (IsPalindrome(guessedPassword)) {k++;}
                     j++;
                 }
                 // Move the cursor back to the beginning of the previous line
@@ -125,6 +132,7 @@ namespace PasswordCracker {
                 Console.WriteLine("Cracking password... Please be patient...");
                 // Display the newly generated guessed password
                 Console.WriteLine("Guessed:" + j);
+                Console.WriteLine("Palindrom: " + k);
                 Console.WriteLine("Your password is: " + guessedPassword);
             }
         }
